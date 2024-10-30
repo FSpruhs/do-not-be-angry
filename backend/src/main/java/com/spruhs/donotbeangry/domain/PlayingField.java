@@ -172,6 +172,30 @@ public class PlayingField {
 
     public List<Action> possibleActions(Player player, int roll) {
         List<Action> result = new LinkedList<>();
+
+        if (roll == 6) {
+            for (Field field : fields) {
+                if (field instanceof BaseField baseField && baseField.getColor() == player.color() && !baseField.isEmpty()) {
+                    for (Field field1 : fields) {
+                        if (field1 instanceof EntranceField entranceField && entranceField.getColor() == player.color() && (field1.isEmpty() || !field1.isEmpty() && field1.getPlacedFigure().color() != player.color())) {
+                            result.add(new Action(field.getPlacedFigure(), field, field1, roll));
+                            return result;
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Field field: fields) {
+            if (field instanceof EntranceField entranceField && entranceField.getColor() == player.color() && !field.isEmpty() && field.getPlacedFigure().color() == player.color()) {
+                for (Field field1 : fields) {
+                    if (field1 instanceof BaseField baseField && baseField.getColor() == player.color() && !baseField.isEmpty()) {
+                        result.add(new Action(field.getPlacedFigure(), field, fields.get(field.getId() + roll), roll));
+                        return result;
+                    }
+                }
+            }
+        }
         for (Field field : fields) {
             if (field.getPlacedFigure() != null && field.getPlacedFigure().color() == player.color()) {
                 if (field instanceof BaseField baseField) {

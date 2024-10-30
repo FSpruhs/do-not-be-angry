@@ -233,4 +233,66 @@ class PlayingFieldTest {
 
         assertThat(playingField.possibleActions(new Player(Color.BLUE), 1)).isEqualTo(List.of(new Action(figure1, playingField.getField(2), playingField.getField(3), 1)));
     }
+
+    @Test
+    void possibleActions_shouldOnlyReturnEntryMove_whenFigureInBase() {
+        PlayingField playingField = new PlayingField();
+
+        Figure figure1 = new Figure(Color.BLUE);
+        Figure figure2 = new Figure(Color.BLUE);
+        Figure figure3 = new Figure(Color.BLUE);
+
+        playingField.getField(0).placeFigure(figure1);
+        playingField.getField(57).placeFigure(figure2);
+        playingField.getField(2).placeFigure(figure3);
+
+        assertThat(playingField.possibleActions(new Player(Color.BLUE), 6)).isEqualTo(List.of(new Action(figure1, playingField.getField(0), playingField.getField(6), 6)));
+
+    }
+
+    @Test
+    void possibleActions_shouldReturnMultipleMoves_whenNoFigureInBase() {
+        PlayingField playingField = new PlayingField();
+
+        Figure figure1 = new Figure(Color.BLUE);
+        Figure figure2 = new Figure(Color.BLUE);
+
+        playingField.getField(0).placeFigure(figure1);
+        playingField.getField(2).placeFigure(figure2);
+
+        assertThat(playingField.possibleActions(new Player(Color.BLUE), 6)).isEqualTo(List.of(
+                new Action(figure1, playingField.getField(0), playingField.getField(6), 6),
+                new Action(figure1, playingField.getField(2), playingField.getField(8), 6)
+        ));
+    }
+
+    @Test
+    void possibleActions_shouldOnlyLeaveBase_whenRollSix() {
+        PlayingField playingField = new PlayingField();
+
+        Figure figure1 = new Figure(Color.BLUE);
+        Figure figure2 = new Figure(Color.BLUE);
+
+        playingField.getField(57).placeFigure(figure1);
+        playingField.getField(2).placeFigure(figure2);
+
+        assertThat(playingField.possibleActions(new Player(Color.BLUE), 6)).isEqualTo(List.of(new Action(figure1, playingField.getField(57), playingField.getField(0), 6)));
+
+    }
+
+    @Test
+    void possibleActions_shouldReturnMultipleMoves_whenRollSixAndBaseIsEmpty() {
+        PlayingField playingField = new PlayingField();
+
+        Figure figure1 = new Figure(Color.BLUE);
+        Figure figure2 = new Figure(Color.BLUE);
+
+        playingField.getField(1).placeFigure(figure1);
+        playingField.getField(2).placeFigure(figure2);
+
+        assertThat(playingField.possibleActions(new Player(Color.BLUE), 6)).isEqualTo(List.of(
+                new Action(figure1, playingField.getField(1), playingField.getField(7), 6),
+                new Action(figure1, playingField.getField(2), playingField.getField(8), 6)
+        ));
+    }
 }
