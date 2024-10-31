@@ -1,5 +1,7 @@
 package com.spruhs.donotbeangry.domain.player;
 
+import com.spruhs.donotbeangry.domain.Color;
+
 import java.util.List;
 
 public record Players(List<Player> players) {
@@ -21,6 +23,14 @@ public record Players(List<Player> players) {
             throw new IllegalArgumentException("Players must have unique colors");
         }
 
+    }
+
+    public boolean containsColor(Color color) {
+        return players.stream().anyMatch(player -> player.color().equals(color));
+    }
+
+    public Player getPlayerByColor(Color color) {
+        return players.stream().filter(player -> player.color().equals(color)).findFirst().orElseThrow();
     }
 
 }

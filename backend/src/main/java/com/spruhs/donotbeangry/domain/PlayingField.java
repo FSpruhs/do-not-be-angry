@@ -230,18 +230,12 @@ public class PlayingField {
     }
 
     public Color nextColor(Color color) {
-        switch (color) {
-            case RED:
-                return Color.YELLOW;
-            case BLUE:
-                return Color.GREEN;
-            case GREEN:
-                return Color.RED;
-            case YELLOW:
-                return Color.BLUE;
-            default:
-                throw new IllegalArgumentException("Unknown color " + color);
-        }
+        return switch (color) {
+            case RED -> Color.YELLOW;
+            case BLUE -> Color.GREEN;
+            case GREEN -> Color.RED;
+            case YELLOW -> Color.BLUE;
+        };
     }
 
     public void moveFigure(Action action) {
