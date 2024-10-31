@@ -295,4 +295,19 @@ class PlayingFieldTest {
                 new Action(figure1, playingField.getField(2), playingField.getField(8), 6)
         ));
     }
+
+    @Test
+    void possibleActions_shouldNotReturnLeaveEntrance_whenBlocked() {
+        PlayingField playingField = new PlayingField();
+
+        Figure figure1 = new Figure(Color.BLUE);
+        Figure figure2 = new Figure(Color.BLUE);
+        Figure figure3 = new Figure(Color.BLUE);
+
+        playingField.getField(0).placeFigure(figure1);
+        playingField.getField(6).placeFigure(figure2);
+        playingField.getField(57).placeFigure(figure3);
+
+        assertThat(playingField.possibleActions(new Player(Color.BLUE), 6)).isEqualTo(List.of(new Action(figure1, playingField.getField(6), playingField.getField(12), 6)));
+    }
 }

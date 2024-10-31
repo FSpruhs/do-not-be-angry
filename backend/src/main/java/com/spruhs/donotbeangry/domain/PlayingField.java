@@ -190,8 +190,10 @@ public class PlayingField {
             if (field instanceof EntranceField entranceField && entranceField.getColor() == player.color() && !field.isEmpty() && field.getPlacedFigure().color() == player.color()) {
                 for (Field field1 : fields) {
                     if (field1 instanceof BaseField baseField && baseField.getColor() == player.color() && !baseField.isEmpty()) {
-                        result.add(new Action(field.getPlacedFigure(), field, fields.get(field.getId() + roll), roll));
-                        return result;
+                        if (getField(field.getId() + roll).isEmpty() || !getField(field.getId() + roll).isEmpty() && getField(field.getId() + roll).getPlacedFigure().color() != player.color()) {
+                            result.add(new Action(field.getPlacedFigure(), field, getField(field.getId() + roll), roll));
+                            return result;
+                        }
                     }
                 }
             }
