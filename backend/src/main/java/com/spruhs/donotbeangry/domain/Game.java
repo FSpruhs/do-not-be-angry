@@ -5,6 +5,7 @@ import com.spruhs.donotbeangry.domain.player.Players;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class Game {
@@ -60,6 +61,12 @@ public class Game {
                 currentPlayer = players.getPlayerByColor(nextColor);
             }
         }
-        return playingField.winner().get();
+
+        Optional<Color> winner = playingField.winner();
+
+        if (winner.isEmpty()) {
+            throw new IllegalStateException("Winner is not present");
+        }
+        return winner.get();
     }
 }
