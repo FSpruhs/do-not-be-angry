@@ -2,9 +2,11 @@ package com.spruhs.donotbeangry.domain.player;
 
 import com.spruhs.donotbeangry.domain.Action;
 import com.spruhs.donotbeangry.domain.PlayingField;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+@EqualsAndHashCode
 public class Random implements Strategy {
 
     @Override

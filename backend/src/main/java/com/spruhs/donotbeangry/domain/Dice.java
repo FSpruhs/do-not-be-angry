@@ -1,9 +1,6 @@
 package com.spruhs.donotbeangry.domain;
 
-public record Dice() {
+public interface Dice {
 
-    public int roll() {
-        return (int) (Math.random() * 6) + 1;
-    }
-
+        int roll();
 }

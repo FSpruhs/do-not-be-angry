@@ -2,7 +2,6 @@ package com.spruhs.donotbeangry.domain;
 
 import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.Players;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -13,16 +12,21 @@ public class Game {
     private final Players players;
     private PlayingField playingField;
     private final Dice dice;
-    private Player currentPlayer;
+    private Player currentPlayer = null;
     private int rollCounter = 0;
     private boolean wasSix = false;
 
-    public void start() {
-        playingField = new PlayingField();
+    public Game(Players players, PlayingField playingField, Dice dice) {
+        this.players = players;
+        this.playingField = playingField;
+        this.dice = dice;
+    }
+
+    public Color start() {
         for (Player player : players.players()) {
             playingField.putFiguresOnField(player.color());
         }
-        int randomIndex = (int) (Math.random() * players.players().size());
+        int randomIndex = dice.roll() % players.players().size();
         currentPlayer = players.players().get(randomIndex);
 
         while (playingField.winner().isEmpty()) {
@@ -32,7 +36,7 @@ public class Game {
                 wasSix = true;
             }
             List<Action> possibleActions = playingField.possibleActions(currentPlayer, roll);
-            if (possibleActions.isEmpty() && rollCounter <= 3 && !wasSix) {
+            if (possibleActions.isEmpty() && rollCounter < 3 && !wasSix) {
                 continue;
             } else if (possibleActions.isEmpty()) {
                 wasSix = false;
@@ -56,5 +60,6 @@ public class Game {
                 currentPlayer = players.getPlayerByColor(nextColor);
             }
         }
+        return playingField.winner().get();
     }
 }

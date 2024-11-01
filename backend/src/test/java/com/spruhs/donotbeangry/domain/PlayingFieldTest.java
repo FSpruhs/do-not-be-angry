@@ -18,7 +18,7 @@ class PlayingFieldTest {
 
     @Test
     void getField_shouldGetFieldWithId() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
         for (int i = 0; i < 72; i++) {
             assertThat(playingField.getField(i).getId()).isEqualTo(i);
         }
@@ -26,14 +26,14 @@ class PlayingFieldTest {
 
     @Test
     void getField_shouldThrowException_whenFieldNotExists() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
         assertThatThrownBy(() -> playingField.getField(73))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void putFigureOnField_shouldPutFigureOnField() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
         playingField.putFiguresOnField(Color.BLUE);
         playingField.putFiguresOnField(Color.GREEN);
         playingField.putFiguresOnField(Color.RED);
@@ -62,7 +62,7 @@ class PlayingFieldTest {
 
     @Test
     void winner_shouldBeEmpty_whenNoFiguresInHome() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         playingField.putFiguresOnField(Color.BLUE);
 
@@ -72,7 +72,7 @@ class PlayingFieldTest {
     @ParameterizedTest
     @MethodSource("winnerTrue")
     void winner_shouldBeColor_whenAllFiguresInHome(Color color, List<Integer> homeIds) {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         playingField.getField(homeIds.get(0)).placeFigure(new Figure(color));
         playingField.getField(homeIds.get(1)).placeFigure(new Figure(color));
@@ -93,7 +93,7 @@ class PlayingFieldTest {
 
     @Test
     void winner_shouldEmpty_whenNotAllBlueFiguresInHome() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         playingField.getField(39).placeFigure(new Figure(Color.BLUE));
         playingField.getField(41).placeFigure(new Figure(Color.BLUE));
@@ -105,7 +105,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnLeaveBase_whenRollSix() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure = new Figure(Color.BLUE);
         playingField.getField(57).placeFigure(figure);
@@ -116,7 +116,7 @@ class PlayingFieldTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
     void possibleActions_shouldNotReturnLeaveBase_whenRollNotSix(int roll) {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure = new Figure(Color.BLUE);
         playingField.getField(57).placeFigure(figure);
@@ -126,7 +126,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldRNotReturnLeaveBase_whenEntryIsBlocked() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -138,7 +138,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnKickOut_whenFieldContainsOpponent() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.GREEN);
@@ -150,7 +150,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnStepOver() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -162,7 +162,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnEnterHome() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure = new Figure(Color.BLUE);
         playingField.getField(38).placeFigure(figure);
@@ -172,7 +172,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnEnterHome_whenOnExitField() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure = new Figure(Color.BLUE);
         playingField.getField(40).placeFigure(figure);
@@ -182,7 +182,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnCircle_whenStepOverEnd() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure = new Figure(Color.GREEN);
         playingField.getField(39).placeFigure(figure);
@@ -193,7 +193,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldNotEnterOpponentsHome() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure = new Figure(Color.BLUE);
         playingField.getField(9).placeFigure(figure);
@@ -203,7 +203,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnEmpty_whenHomeEnds() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure = new Figure(Color.BLUE);
         playingField.getField(41).placeFigure(figure);
@@ -213,7 +213,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnEmpty_whenHomeIsBlocked() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -225,7 +225,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnOneAction_whenSelfBlocked() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -237,7 +237,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldOnlyReturnEntryMove_whenFigureInBase() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -253,7 +253,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnMultipleMoves_whenNoFigureInBase() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -269,7 +269,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldOnlyLeaveBase_whenRollSix() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -283,7 +283,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldReturnMultipleMoves_whenRollSixAndBaseIsEmpty() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
@@ -299,7 +299,7 @@ class PlayingFieldTest {
 
     @Test
     void possibleActions_shouldNotReturnLeaveEntrance_whenBlocked() {
-        PlayingField playingField = new PlayingField();
+        StandardPlayingField playingField = new StandardPlayingField();
 
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
