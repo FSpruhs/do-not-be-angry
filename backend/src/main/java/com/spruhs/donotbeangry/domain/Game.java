@@ -24,9 +24,6 @@ public class Game {
     }
 
     public Color start() {
-        for (Player player : players.players()) {
-            playingField.putFiguresOnField(player.color());
-        }
         int randomIndex = dice.roll() % players.players().size();
         currentPlayer = players.players().get(randomIndex);
 

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PlayingField {
-    void putFiguresOnField(Color color);
     Optional<Color> winner();
     List<Action> possibleActions(Player player, int roll);
     Color nextColor(Color color);

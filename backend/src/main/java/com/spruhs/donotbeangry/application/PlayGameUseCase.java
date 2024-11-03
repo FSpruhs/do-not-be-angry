@@ -14,12 +14,14 @@ public class PlayGameUseCase {
 
     public Color playGame(Command command) {
         Dice dice = new SimpleDice();
-        PlayingField playingField = new StandardPlayingField();
-        List<Player> players = new LinkedList<>();
+        List<Player> playerList = new LinkedList<>();
         for (Color color : command.players) {
-            players.add(new Player(color, new Random()));
+            playerList.add(new Player(color, new Random()));
         }
-        Game game = new Game(new Players(players), playingField, dice);
+
+        Players players = new Players(playerList);
+        PlayingField playingField = new StandardPlayingField(players);
+        Game game = new Game(players, playingField, dice);
         return game.start();
     }
 
