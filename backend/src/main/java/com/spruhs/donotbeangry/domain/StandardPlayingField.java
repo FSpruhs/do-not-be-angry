@@ -101,37 +101,23 @@ public class StandardPlayingField implements PlayingField {
         redExit.setHomeField(redHomes.get(0));
         yellowExit.setHomeField(yellowHomes.get(0));
 
-        for (int i = 0; i < 4; i++) {
-            BaseField baseField = new BaseField(Color.BLUE);
-            baseField.setId(counter);
-            counter++;
-            baseField.setNextField(blueEntrance);
-            fields.add(baseField);
-        }
 
-        for (int i = 0; i < 4; i++) {
-            BaseField baseField = new BaseField(Color.GREEN);
-            baseField.setId(counter);
-            counter++;
-            baseField.setNextField(greenEntrance);
-            fields.add(baseField);
-        }
+        counter = initBaseFields(counter, blueEntrance);
+        counter = initBaseFields(counter, greenEntrance);
+        counter = initBaseFields(counter, redEntrance);
+        initBaseFields(counter, yellowEntrance);
 
-        for (int i = 0; i < 4; i++) {
-            BaseField baseField = new BaseField(Color.RED);
-            baseField.setId(counter);
-            counter++;
-            baseField.setNextField(redEntrance);
-            fields.add(baseField);
-        }
+    }
 
+    private int initBaseFields(int counter, EntranceField entranceField) {
         for (int i = 0; i < 4; i++) {
-            BaseField baseField = new BaseField(Color.YELLOW);
+            BaseField baseField = new BaseField(entranceField.getColor());
             baseField.setId(counter);
             counter++;
-            baseField.setNextField(yellowEntrance);
+            baseField.setNextField(entranceField);
             fields.add(baseField);
         }
+        return counter;
     }
 
     public Field getField(int id) {
