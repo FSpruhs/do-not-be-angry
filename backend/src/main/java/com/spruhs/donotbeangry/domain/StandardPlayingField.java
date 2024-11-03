@@ -51,62 +51,34 @@ public class StandardPlayingField implements PlayingField {
         }
         blueExit.setNextField(blueEntrance);
 
-        HomeField actualHomeField = blueHomes.get(0);
-        for (int i = 0; i < 4; i++) {
-            actualHomeField.setId(counter);
-            counter++;
-            fields.add(actualHomeField);
-            if (i != 3) {
-                actualHomeField.setNextField(blueHomes.get(i + 1));
-                actualHomeField = blueHomes.get(i + 1);
-            }
-        }
+        counter = initHomeFields(counter, blueHomes);
+        counter = initHomeFields(counter, greenHomes);
+        counter = initHomeFields(counter, redHomes);
+        counter = initHomeFields(counter, yellowHomes);
 
-        actualHomeField = greenHomes.get(0);
-        for (int i = 0; i < 4; i++) {
-            actualHomeField.setId(counter);
-            counter++;
-            fields.add(actualHomeField);
-            if (i != 3) {
-                actualHomeField.setNextField(greenHomes.get(i + 1));
-                actualHomeField = greenHomes.get(i + 1);
-            }
-                    }
-
-        actualHomeField = redHomes.get(0);
-        for (int i = 0; i < 4; i++) {
-            actualHomeField.setId(counter);
-            counter++;
-            fields.add(actualHomeField);
-            if (i != 3) {
-                actualHomeField.setNextField(redHomes.get(i + 1));
-                actualHomeField = redHomes.get(i + 1);
-            }
-        }
-
-        actualHomeField = yellowHomes.get(0);
-        for (int i = 0; i < 4; i++) {
-            actualHomeField.setId(counter);
-            counter++;
-            fields.add(actualHomeField);
-            if (i != 3) {
-                actualHomeField.setNextField(yellowHomes.get(i + 1));
-                actualHomeField = yellowHomes.get(i + 1);
-            }
-
-        }
-
-        blueExit.setHomeField(blueHomes.get(0));
-        greenExit.setHomeField(greenHomes.get(0));
-        redExit.setHomeField(redHomes.get(0));
-        yellowExit.setHomeField(yellowHomes.get(0));
-
+        blueExit.setHomeField(blueHomes.getFirst());
+        greenExit.setHomeField(greenHomes.getFirst());
+        redExit.setHomeField(redHomes.getFirst());
+        yellowExit.setHomeField(yellowHomes.getFirst());
 
         counter = initBaseFields(counter, blueEntrance);
         counter = initBaseFields(counter, greenEntrance);
         counter = initBaseFields(counter, redEntrance);
         initBaseFields(counter, yellowEntrance);
+    }
 
+    private int initHomeFields(int counter, List<HomeField> homes)  {
+        HomeField actualHomeField = homes.getFirst();
+        for (int i = 0; i < 4; i++) {
+            actualHomeField.setId(counter);
+            counter++;
+            fields.add(actualHomeField);
+            if (i != 3) {
+                actualHomeField.setNextField(homes.get(i + 1));
+                actualHomeField = homes.get(i + 1);
+            }
+        }
+        return counter;
     }
 
     private int initBaseFields(int counter, EntranceField entranceField) {
