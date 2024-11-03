@@ -1,4 +1,6 @@
 package com.spruhs.donotbeangry.adapter.rest;
 
-public record PlayGameResponse() {
+import com.spruhs.donotbeangry.domain.Color;
+
+public record PlayGameResponse(Color winner) {
 }

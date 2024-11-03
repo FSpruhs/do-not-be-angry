@@ -1,6 +1,7 @@
 package com.spruhs.donotbeangry.adapter.rest;
 
 import com.spruhs.donotbeangry.application.PlayGameUseCase;
+import com.spruhs.donotbeangry.domain.Color;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ public class GameRestAdapter {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public PlayGameResponse playGame(@Valid @RequestBody PlayGameMessage playGameMessage) {
-        playGameUseCase.playGame(new PlayGameUseCase.Command());
-        return new PlayGameResponse();
+        Color winner = playGameUseCase.playGame(new PlayGameUseCase.Command(playGameMessage.players()));
+        return new PlayGameResponse(winner);
     }
 }

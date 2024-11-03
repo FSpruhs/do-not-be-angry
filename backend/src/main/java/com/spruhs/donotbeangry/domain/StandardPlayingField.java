@@ -208,8 +208,11 @@ public class StandardPlayingField implements PlayingField {
                 }
 
                 Field nextField = field instanceof ExitField exitField && exitField.getColor() == player.color() ? exitField.getHomeField() : field.getNextField();
+                if (nextField == null) {
+                    continue;
+                }
                 for (int i = 0; i < roll - 1; i++) {
-                    nextField = nextField instanceof ExitField exitField && exitField.getColor() == player.color()  ? exitField.getHomeField() : nextField.getNextField();;
+                    nextField = nextField instanceof ExitField exitField && exitField.getColor() == player.color() ? exitField.getHomeField() : nextField.getNextField();
                     if (nextField == null) {
                         break;
                     }

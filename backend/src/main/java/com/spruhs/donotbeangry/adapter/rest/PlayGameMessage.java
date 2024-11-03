@@ -1,4 +1,9 @@
 package com.spruhs.donotbeangry.adapter.rest;
 
-public record PlayGameMessage() {
+import com.spruhs.donotbeangry.domain.Color;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.List;
+
+public record PlayGameMessage(@NotNull List<Color> players) {
 }
