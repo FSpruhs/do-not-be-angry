@@ -51,25 +51,25 @@ class PlayingFieldTest {
                 new Player(Color.YELLOW, new Random())
         )));
 
+        assertThat(playingField.getField(56).getPlacedFigure().color()).isEqualTo(Color.BLUE);
         assertThat(playingField.getField(57).getPlacedFigure().color()).isEqualTo(Color.BLUE);
         assertThat(playingField.getField(58).getPlacedFigure().color()).isEqualTo(Color.BLUE);
         assertThat(playingField.getField(59).getPlacedFigure().color()).isEqualTo(Color.BLUE);
-        assertThat(playingField.getField(60).getPlacedFigure().color()).isEqualTo(Color.BLUE);
 
+        assertThat(playingField.getField(60).getPlacedFigure().color()).isEqualTo(Color.GREEN);
         assertThat(playingField.getField(61).getPlacedFigure().color()).isEqualTo(Color.GREEN);
         assertThat(playingField.getField(62).getPlacedFigure().color()).isEqualTo(Color.GREEN);
         assertThat(playingField.getField(63).getPlacedFigure().color()).isEqualTo(Color.GREEN);
-        assertThat(playingField.getField(64).getPlacedFigure().color()).isEqualTo(Color.GREEN);
 
+        assertThat(playingField.getField(64).getPlacedFigure().color()).isEqualTo(Color.RED);
         assertThat(playingField.getField(65).getPlacedFigure().color()).isEqualTo(Color.RED);
         assertThat(playingField.getField(66).getPlacedFigure().color()).isEqualTo(Color.RED);
         assertThat(playingField.getField(67).getPlacedFigure().color()).isEqualTo(Color.RED);
-        assertThat(playingField.getField(68).getPlacedFigure().color()).isEqualTo(Color.RED);
 
+        assertThat(playingField.getField(68).getPlacedFigure().color()).isEqualTo(Color.YELLOW);
         assertThat(playingField.getField(69).getPlacedFigure().color()).isEqualTo(Color.YELLOW);
         assertThat(playingField.getField(70).getPlacedFigure().color()).isEqualTo(Color.YELLOW);
         assertThat(playingField.getField(71).getPlacedFigure().color()).isEqualTo(Color.YELLOW);
-        assertThat(playingField.getField(72).getPlacedFigure().color()).isEqualTo(Color.YELLOW);
     }
 
     @Test
@@ -105,10 +105,10 @@ class PlayingFieldTest {
 
     private static Stream<Arguments> winnerTrue() {
         return Stream.of(
-                Arguments.of(Color.BLUE, List.of(41, 42, 43, 44)),
-                Arguments.of(Color.GREEN, List.of(45, 46, 47, 48)),
-                Arguments.of(Color.RED, List.of(49, 50, 51, 52)),
-                Arguments.of(Color.YELLOW, List.of(53, 54, 55, 56))
+                Arguments.of(Color.BLUE, List.of(40, 41, 42, 43)),
+                Arguments.of(Color.GREEN, List.of(44, 45, 46, 47)),
+                Arguments.of(Color.RED, List.of(48, 49, 50, 51)),
+                Arguments.of(Color.YELLOW, List.of(52, 53, 54, 55))
         );
     }
 
@@ -139,9 +139,8 @@ class PlayingFieldTest {
         )));
 
         Figure figure = new Figure(Color.BLUE);
-        playingField.getField(57).placeFigure(figure);
 
-        assertThat(playingField.possibleActions(new Player(Color.BLUE, new Random()), 6)).isEqualTo(List.of(new Action(figure, playingField.getField(57), playingField.getField(0), 6)));
+        assertThat(playingField.possibleActions(new Player(Color.BLUE, new Random()), 6)).isEqualTo(List.of(new Action(figure, playingField.getField(56), playingField.getField(0), 6)));
     }
 
     @ParameterizedTest
@@ -249,9 +248,9 @@ class PlayingFieldTest {
         )));
 
         Figure figure = new Figure(Color.GREEN);
-        playingField.getField(39).placeFigure(figure);
+        playingField.getField(38).placeFigure(figure);
 
-        assertThat(playingField.possibleActions(new Player(Color.GREEN, new Random()), 3)).isEqualTo(List.of(new Action(figure, playingField.getField(39), playingField.getField(1), 3)));
+        assertThat(playingField.possibleActions(new Player(Color.GREEN, new Random()), 3)).isEqualTo(List.of(new Action(figure, playingField.getField(38), playingField.getField(1), 3)));
     }
 
 
@@ -369,10 +368,9 @@ class PlayingFieldTest {
         Figure figure1 = new Figure(Color.BLUE);
         Figure figure2 = new Figure(Color.BLUE);
 
-        playingField.getField(57).placeFigure(figure1);
         playingField.getField(2).placeFigure(figure2);
 
-        assertThat(playingField.possibleActions(new Player(Color.BLUE, new Random()), 6)).isEqualTo(List.of(new Action(figure1, playingField.getField(57), playingField.getField(0), 6)));
+        assertThat(playingField.possibleActions(new Player(Color.BLUE, new Random()), 6)).isEqualTo(List.of(new Action(figure1, playingField.getField(56), playingField.getField(0), 6)));
 
     }
 

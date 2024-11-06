@@ -8,6 +8,15 @@ import java.util.*;
 
 public class StandardPlayingField implements PlayingField {
 
+    private final int BLUE_ENTRANCE_ID = 0;
+    private final int BLUE_EXIT_ID = 39;
+    private final int GREEN_ENTRANCE_ID = 10;
+    private final int GREEN_EXIT_ID = 9;
+    private final int RED_ENTRANCE_ID = 20;
+    private final int RED_EXIT_ID = 19;
+    private final int YELLOW_ENTRANCE_ID = 30;
+    private final int YELLOW_EXIT_ID = 29;
+
     private final List<Field> fields;
 
     public StandardPlayingField(Players players) {
@@ -21,7 +30,7 @@ public class StandardPlayingField implements PlayingField {
 
         ExitField redExit = new ExitField(Color.RED);
         ExitField blueExit = new ExitField(Color.BLUE);
-        ExitField greenExit = new ExitField(Color.GREEN);
+        //ExitField greenExit = new ExitField(Color.GREEN);
         ExitField yellowExit = new ExitField(Color.YELLOW);
 
         List<HomeField> redHomes = createHomeFields(Color.RED);
@@ -30,16 +39,16 @@ public class StandardPlayingField implements PlayingField {
         List<HomeField> yellowHomes = createHomeFields(Color.YELLOW);
 
         Field actualField = blueEntrance;
-        for (int i = 0; i < 41; i++) {
+        for (int i = 0; i < 40; i++) {
 
-            Field nextField = switch (i) {
-                case 9 -> greenExit;
-                case 10 -> greenEntrance;
-                case 19 -> redExit;
-                case 20 -> redEntrance;
-                case 29 -> yellowExit;
-                case 30 -> yellowEntrance;
-                case 39 -> blueExit;
+            Field nextField = switch (i + 1) {
+                case GREEN_EXIT_ID -> new ExitField(Color.GREEN);
+                case GREEN_ENTRANCE_ID -> greenEntrance;
+                case RED_EXIT_ID -> redExit;
+                case RED_ENTRANCE_ID -> redEntrance;
+                case YELLOW_EXIT_ID -> yellowExit;
+                case YELLOW_ENTRANCE_ID -> yellowEntrance;
+                case BLUE_EXIT_ID -> blueExit;
                 default -> new StandardField();
             };
 
@@ -55,10 +64,10 @@ public class StandardPlayingField implements PlayingField {
         counter = initHomeFields(counter, redHomes);
         counter = initHomeFields(counter, yellowHomes);
 
-        blueExit.setHomeField(blueHomes.getFirst());
-        greenExit.setHomeField(greenHomes.getFirst());
-        redExit.setHomeField(redHomes.getFirst());
-        yellowExit.setHomeField(yellowHomes.getFirst());
+        setExitFieldHome(BLUE_EXIT_ID, blueHomes);
+        setExitFieldHome(GREEN_EXIT_ID, greenHomes);
+        setExitFieldHome(RED_EXIT_ID, redHomes);
+        setExitFieldHome(YELLOW_EXIT_ID, yellowHomes);
 
         counter = initBaseFields(counter, blueEntrance);
         counter = initBaseFields(counter, greenEntrance);
@@ -67,6 +76,14 @@ public class StandardPlayingField implements PlayingField {
 
         for (Player player : players.players()) {
             putFiguresOnField(player.color());
+        }
+    }
+
+    private void setExitFieldHome(int fieldId, List<HomeField> homeFields) {
+        if (getField(fieldId) instanceof ExitField exitField) {
+            exitField.setHomeField(homeFields.getFirst());
+        } else {
+            throw new IllegalStateException("Field with id " + fieldId + " is not an ExitField");
         }
     }
 
@@ -116,7 +133,6 @@ public class StandardPlayingField implements PlayingField {
     }
 
     public Optional<Color> winner() {
-
         Map<Color, Integer> colorMap = new EnumMap<>(Color.class);
 
         for (Color color : Color.values()) {
