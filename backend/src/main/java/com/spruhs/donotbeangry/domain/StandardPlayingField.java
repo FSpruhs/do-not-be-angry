@@ -53,19 +53,22 @@ public class StandardPlayingField implements PlayingField {
         if (!(field instanceof ExitField exitField)) {
             throw new IllegalStateException("Field with id " + field.getId() + " is not an ExitField");
         }
-        HomeField previousHomeField = null;
-        for (int i = 0; i < 4; i++) {
-            HomeField homeField = new HomeField(exitField.getColor());
-            homeField.setId(counter++);
-            fields.add(homeField);
-            if (i == 0){
-                exitField.setHomeField(homeField);
-            } else {
-                previousHomeField.setNextField(homeField);
-            }
-            previousHomeField = homeField;
+        HomeField homeField = initHomeField(counter++, exitField.getColor());
+        exitField.setHomeField(homeField);
+        for (int i = 0; i < 3; i++) {
+                HomeField nextHomeField = initHomeField(counter++, exitField.getColor());
+                homeField.setNextField(nextHomeField);
+                homeField = nextHomeField;
         }
-        return counter;
+            return counter;
+
+    }
+
+    private HomeField initHomeField(int counter, Color color) {
+        HomeField homeField = new HomeField(color);
+        homeField.setId(counter);
+        fields.add(homeField);
+        return homeField;
     }
 
     private int initBaseField(int counter) {
