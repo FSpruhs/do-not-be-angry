@@ -23,41 +23,12 @@ public class StandardPlayingField implements PlayingField {
         fields = new ArrayList<>();
         int counter = 0;
 
-        EntranceField redEntrance = new EntranceField(Color.RED);
-        EntranceField blueEntrance = new EntranceField(Color.BLUE);
-        EntranceField greenEntrance = new EntranceField(Color.GREEN);
-        EntranceField yellowEntrance = new EntranceField(Color.YELLOW);
-
-        ExitField redExit = new ExitField(Color.RED);
-        ExitField blueExit = new ExitField(Color.BLUE);
-        //ExitField greenExit = new ExitField(Color.GREEN);
-        ExitField yellowExit = new ExitField(Color.YELLOW);
-
         List<HomeField> redHomes = createHomeFields(Color.RED);
         List<HomeField> blueHomes = createHomeFields(Color.BLUE);
         List<HomeField> greenHomes = createHomeFields(Color.GREEN);
         List<HomeField> yellowHomes = createHomeFields(Color.YELLOW);
 
-        Field actualField = blueEntrance;
-        for (int i = 0; i < 40; i++) {
-
-            Field nextField = switch (i + 1) {
-                case GREEN_EXIT_ID -> new ExitField(Color.GREEN);
-                case GREEN_ENTRANCE_ID -> greenEntrance;
-                case RED_EXIT_ID -> redExit;
-                case RED_ENTRANCE_ID -> redEntrance;
-                case YELLOW_EXIT_ID -> yellowExit;
-                case YELLOW_ENTRANCE_ID -> yellowEntrance;
-                case BLUE_EXIT_ID -> blueExit;
-                default -> new StandardField();
-            };
-
-            actualField.setNextField(nextField);
-            actualField.setId(counter++);
-            fields.add(actualField);
-            actualField = nextField;
-        }
-        blueExit.setNextField(blueEntrance);
+        counter = initBaseField(counter);
 
         counter = initHomeFields(counter, blueHomes);
         counter = initHomeFields(counter, greenHomes);
@@ -69,14 +40,38 @@ public class StandardPlayingField implements PlayingField {
         setExitFieldHome(RED_EXIT_ID, redHomes);
         setExitFieldHome(YELLOW_EXIT_ID, yellowHomes);
 
-        counter = initBaseFields(counter, blueEntrance);
-        counter = initBaseFields(counter, greenEntrance);
-        counter = initBaseFields(counter, redEntrance);
-        initBaseFields(counter, yellowEntrance);
+        counter = initBaseFields(counter, getField(BLUE_ENTRANCE_ID));
+        counter = initBaseFields(counter, getField(GREEN_ENTRANCE_ID));
+        counter = initBaseFields(counter, getField(RED_ENTRANCE_ID));
+        initBaseFields(counter, getField(YELLOW_ENTRANCE_ID));
 
         for (Player player : players.players()) {
             putFiguresOnField(player.color());
         }
+    }
+
+    private int initBaseField(int counter) {
+        Field actualField = new EntranceField(Color.BLUE);
+        for (int i = 0; i < 40; i++) {
+
+            Field nextField = switch (i + 1) {
+                case GREEN_EXIT_ID -> new ExitField(Color.GREEN);
+                case GREEN_ENTRANCE_ID -> new EntranceField(Color.GREEN);
+                case RED_EXIT_ID -> new ExitField(Color.RED);
+                case RED_ENTRANCE_ID -> new EntranceField(Color.RED);
+                case YELLOW_EXIT_ID -> new ExitField(Color.YELLOW);
+                case YELLOW_ENTRANCE_ID -> new EntranceField(Color.YELLOW);
+                case BLUE_EXIT_ID -> new ExitField(Color.BLUE);
+                default -> new StandardField();
+            };
+
+            actualField.setNextField(nextField);
+            actualField.setId(counter++);
+            fields.add(actualField);
+            actualField = nextField;
+        }
+        getField(BLUE_EXIT_ID).setNextField(getField(BLUE_ENTRANCE_ID));
+        return counter;
     }
 
     private void setExitFieldHome(int fieldId, List<HomeField> homeFields) {
@@ -109,7 +104,10 @@ public class StandardPlayingField implements PlayingField {
     }
 
 
-    private int initBaseFields(int counter, EntranceField entranceField) {
+    private int initBaseFields(int counter, Field field) {
+        if (!(field instanceof EntranceField entranceField)) {
+            throw new IllegalArgumentException("Field with id " + field.getId() + " is not an EntranceField");
+        }
         for (int i = 0; i < 4; i++) {
             BaseField baseField = new BaseField(entranceField.getColor());
             baseField.setId(counter++);
