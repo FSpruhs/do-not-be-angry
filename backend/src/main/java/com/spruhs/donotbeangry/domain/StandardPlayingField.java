@@ -53,10 +53,10 @@ public class StandardPlayingField implements PlayingField {
         if (!(field instanceof ExitField exitField)) {
             throw new IllegalStateException("Field with id " + field.getId() + " is not an ExitField");
         }
-        HomeField homeField = initHomeField(counter++, exitField.getColor());
+        HomeField homeField = createColorfulField(HomeField.class, exitField.getColor(), counter++);
         exitField.setHomeField(homeField);
         for (int i = 0; i < 3; i++) {
-                HomeField nextHomeField = initHomeField(counter++, exitField.getColor());
+                HomeField nextHomeField = createColorfulField(HomeField.class, exitField.getColor(), counter++);
                 homeField.setNextField(nextHomeField);
                 homeField = nextHomeField;
         }
@@ -64,11 +64,16 @@ public class StandardPlayingField implements PlayingField {
 
     }
 
-    private HomeField initHomeField(int counter, Color color) {
-        HomeField homeField = new HomeField(color);
-        homeField.setId(counter);
-        fields.add(homeField);
-        return homeField;
+    private <T extends ColorfulField> T createColorfulField(Class<T> colorfulField, Color color, int counter) {
+        T field;
+        try {
+            field = colorfulField.getDeclaredConstructor(Color.class).newInstance(color);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        field.setId(counter);
+        fields.add(field);
+        return field;
     }
 
     private int initBaseField(int counter) {
@@ -101,10 +106,8 @@ public class StandardPlayingField implements PlayingField {
             throw new IllegalArgumentException("Field with id " + field.getId() + " is not an EntranceField");
         }
         for (int i = 0; i < 4; i++) {
-            BaseField baseField = new BaseField(entranceField.getColor());
-            baseField.setId(counter++);
+            BaseField baseField = createColorfulField(BaseField.class, entranceField.getColor(), counter++);
             baseField.setNextField(entranceField);
-            fields.add(baseField);
         }
         return counter;
     }
