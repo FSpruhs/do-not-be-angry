@@ -23,22 +23,12 @@ public class StandardPlayingField implements PlayingField {
         fields = new ArrayList<>();
         int counter = 0;
 
-        List<HomeField> redHomes = createHomeFields(Color.RED);
-        List<HomeField> blueHomes = createHomeFields(Color.BLUE);
-        List<HomeField> greenHomes = createHomeFields(Color.GREEN);
-        List<HomeField> yellowHomes = createHomeFields(Color.YELLOW);
-
         counter = initBaseField(counter);
 
-        counter = initHomeFields(counter, blueHomes);
-        counter = initHomeFields(counter, greenHomes);
-        counter = initHomeFields(counter, redHomes);
-        counter = initHomeFields(counter, yellowHomes);
-
-        setExitFieldHome(BLUE_EXIT_ID, blueHomes);
-        setExitFieldHome(GREEN_EXIT_ID, greenHomes);
-        setExitFieldHome(RED_EXIT_ID, redHomes);
-        setExitFieldHome(YELLOW_EXIT_ID, yellowHomes);
+        counter = initHomeFields(counter, Color.BLUE, BLUE_EXIT_ID);
+        counter = initHomeFields(counter, Color.GREEN, GREEN_EXIT_ID);
+        counter = initHomeFields(counter, Color.RED, RED_EXIT_ID);
+        counter = initHomeFields(counter, Color.YELLOW, YELLOW_EXIT_ID);
 
         counter = initBaseFields(counter, getField(BLUE_ENTRANCE_ID));
         counter = initBaseFields(counter, getField(GREEN_ENTRANCE_ID));
@@ -48,6 +38,25 @@ public class StandardPlayingField implements PlayingField {
         for (Player player : players.players()) {
             putFiguresOnField(player.color());
         }
+    }
+
+    private int initHomeFields(int counter, Color color, int exitFieldId) {
+        Field field = getField(exitFieldId);
+        if (!(field instanceof ExitField exitField)) {
+            throw new IllegalStateException("Field with id " + exitFieldId + " is not an ExitField");
+        }
+        HomeField homeField = new HomeField(color);
+        homeField.setId(counter++);
+        fields.add(homeField);
+        exitField.setHomeField(homeField);
+        for (int i = 0; i < 3; i++) {
+            HomeField nextHomeField = new HomeField(color);
+            nextHomeField.setId(counter++);
+            fields.add(nextHomeField);
+            homeField.setNextField(nextHomeField);
+            homeField = nextHomeField;
+        }
+        return counter;
     }
 
     private int initBaseField(int counter) {
