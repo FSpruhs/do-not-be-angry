@@ -6,11 +6,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-@AllArgsConstructor
 @Getter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class EntranceField extends Field {
+public class EntranceField extends ColorfulField {
 
-    private final Color color;
+
+    public EntranceField(Color color) {
+        super(color);
+    }
 }

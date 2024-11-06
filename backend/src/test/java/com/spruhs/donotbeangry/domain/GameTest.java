@@ -1,6 +1,7 @@
 package com.spruhs.donotbeangry.domain;
 
 import com.spruhs.donotbeangry.domain.field.Field;
+import com.spruhs.donotbeangry.domain.field.StandardField;
 import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.Players;
 import com.spruhs.donotbeangry.domain.player.Random;
@@ -62,7 +63,7 @@ class GameTest {
         when(playingFieldMock.winner()).thenReturn(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(Color.RED));
         when(playersMock.players()).thenReturn(List.of(new Player(Color.RED, new Random()), new Player(Color.BLUE, new Random())));
 
-        when(playingFieldMock.possibleActions(any(), anyInt())).thenReturn(List.of(new Action(new Figure(Color.BLUE), new Field(), new Field(), 6)), List.of());
+        when(playingFieldMock.possibleActions(any(), anyInt())).thenReturn(List.of(new Action(new Figure(Color.BLUE), new StandardField(), new StandardField(), 6)), List.of());
         when(playingFieldMock.nextColor(any())).thenReturn(Color.RED);
         when(playersMock.containsColor(any())).thenReturn(true);
         when(playersMock.getPlayerByColor(any())).thenReturn(new Player(Color.RED, new Random()));
@@ -82,7 +83,7 @@ class GameTest {
         when(playingFieldMock.winner()).thenReturn(Optional.empty(), Optional.empty(), Optional.of(Color.RED));
         when(playersMock.players()).thenReturn(List.of(new Player(Color.RED, new Random()), new Player(Color.BLUE, new Random())));
 
-        when(playingFieldMock.possibleActions(any(), anyInt())).thenReturn(List.of(new Action(new Figure(Color.BLUE), new Field(), new Field(), 6)), List.of());
+        when(playingFieldMock.possibleActions(any(), anyInt())).thenReturn(List.of(new Action(new Figure(Color.BLUE), new StandardField(), new StandardField(), 6)), List.of());
         when(playingFieldMock.nextColor(any())).thenReturn(Color.RED);
         when(playersMock.containsColor(any())).thenReturn(true);
         when(playersMock.getPlayerByColor(any())).thenReturn(new Player(Color.RED, new Random()));
@@ -101,7 +102,7 @@ class GameTest {
         when(playingFieldMock.winner()).thenReturn(Optional.empty(), Optional.empty(), Optional.of(Color.RED));
         when(playersMock.players()).thenReturn(List.of(new Player(Color.RED, new Random()), new Player(Color.BLUE, new Random())));
 
-        when(playingFieldMock.possibleActions(any(), anyInt())).thenReturn(List.of(new Action(new Figure(Color.BLUE), new Field(), new Field(), 6)), List.of());
+        when(playingFieldMock.possibleActions(any(), anyInt())).thenReturn(List.of(new Action(new Figure(Color.BLUE), new StandardField(), new StandardField(), 6)), List.of());
         when(playingFieldMock.nextColor(any())).thenReturn(Color.GREEN, Color.RED);
         when(playersMock.containsColor(Color.GREEN)).thenReturn(false);
         when(playersMock.containsColor(Color.RED)).thenReturn(true);
