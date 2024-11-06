@@ -8,14 +8,14 @@ import java.util.*;
 
 public class StandardPlayingField implements PlayingField {
 
-    private final int BLUE_ENTRANCE_ID = 0;
-    private final int BLUE_EXIT_ID = 39;
-    private final int GREEN_ENTRANCE_ID = 10;
-    private final int GREEN_EXIT_ID = 9;
-    private final int RED_ENTRANCE_ID = 20;
-    private final int RED_EXIT_ID = 19;
-    private final int YELLOW_ENTRANCE_ID = 30;
-    private final int YELLOW_EXIT_ID = 29;
+    private static final int BLUE_ENTRANCE_ID = 0;
+    private static final int BLUE_EXIT_ID = 39;
+    private static final int GREEN_ENTRANCE_ID = 10;
+    private static final int GREEN_EXIT_ID = 9;
+    private static final int RED_ENTRANCE_ID = 20;
+    private static final int RED_EXIT_ID = 19;
+    private static final int YELLOW_ENTRANCE_ID = 30;
+    private static final int YELLOW_EXIT_ID = 29;
 
     private final List<Field> fields;
 
@@ -25,10 +25,10 @@ public class StandardPlayingField implements PlayingField {
 
         counter = initBaseField(counter);
 
-        counter = initHomeFields(counter, Color.BLUE, BLUE_EXIT_ID);
-        counter = initHomeFields(counter, Color.GREEN, GREEN_EXIT_ID);
-        counter = initHomeFields(counter, Color.RED, RED_EXIT_ID);
-        counter = initHomeFields(counter, Color.YELLOW, YELLOW_EXIT_ID);
+        counter = initHomeFields(counter, Color.BLUE, getField(BLUE_EXIT_ID));
+        counter = initHomeFields(counter, Color.GREEN, getField(GREEN_EXIT_ID));
+        counter = initHomeFields(counter, Color.RED, getField(RED_EXIT_ID));
+        counter = initHomeFields(counter, Color.YELLOW, getField(YELLOW_EXIT_ID));
 
         counter = initBaseFields(counter, getField(BLUE_ENTRANCE_ID));
         counter = initBaseFields(counter, getField(GREEN_ENTRANCE_ID));
@@ -40,10 +40,9 @@ public class StandardPlayingField implements PlayingField {
         }
     }
 
-    private int initHomeFields(int counter, Color color, int exitFieldId) {
-        Field field = getField(exitFieldId);
+    private int initHomeFields(int counter, Color color, Field field) {
         if (!(field instanceof ExitField exitField)) {
-            throw new IllegalStateException("Field with id " + exitFieldId + " is not an ExitField");
+            throw new IllegalStateException("Field with id " + field.getId() + " is not an ExitField");
         }
         HomeField homeField = new HomeField(color);
         homeField.setId(counter++);
@@ -80,35 +79,6 @@ public class StandardPlayingField implements PlayingField {
             actualField = nextField;
         }
         getField(BLUE_EXIT_ID).setNextField(getField(BLUE_ENTRANCE_ID));
-        return counter;
-    }
-
-    private void setExitFieldHome(int fieldId, List<HomeField> homeFields) {
-        if (getField(fieldId) instanceof ExitField exitField) {
-            exitField.setHomeField(homeFields.getFirst());
-        } else {
-            throw new IllegalStateException("Field with id " + fieldId + " is not an ExitField");
-        }
-    }
-
-    private List<HomeField> createHomeFields(Color color) {
-        List<HomeField> result = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            result.add(new HomeField(color));
-        }
-        return result;
-    }
-
-    private int initHomeFields(int counter, List<HomeField> homes) {
-        for (int i = 0; i < homes.size(); i++) {
-            HomeField currentField = homes.get(i);
-            currentField.setId(counter++);
-            fields.add(currentField);
-
-            if (i < homes.size() - 1) {
-                currentField.setNextField(homes.get(i + 1));
-            }
-        }
         return counter;
     }
 
