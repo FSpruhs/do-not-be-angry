@@ -25,10 +25,12 @@ public class StandardPlayingField implements PlayingField {
 
         counter = initBaseField(counter);
 
-        counter = initHomeFields(counter, Color.BLUE, getField(BLUE_EXIT_ID));
-        counter = initHomeFields(counter, Color.GREEN, getField(GREEN_EXIT_ID));
-        counter = initHomeFields(counter, Color.RED, getField(RED_EXIT_ID));
-        counter = initHomeFields(counter, Color.YELLOW, getField(YELLOW_EXIT_ID));
+        counter = initAllHomeFields(counter, List.of(
+                BLUE_EXIT_ID,
+                GREEN_EXIT_ID,
+                RED_EXIT_ID,
+                YELLOW_EXIT_ID
+        ));
 
         counter = initBaseFields(counter, getField(BLUE_ENTRANCE_ID));
         counter = initBaseFields(counter, getField(GREEN_ENTRANCE_ID));
@@ -40,20 +42,28 @@ public class StandardPlayingField implements PlayingField {
         }
     }
 
-    private int initHomeFields(int counter, Color color, Field field) {
+    private int initAllHomeFields(int counter, List<Integer> homeFieldIds) {
+        for (int homeFieldId : homeFieldIds) {
+            counter = initHomeFields(counter, getField(homeFieldId));
+        }
+        return counter;
+    }
+
+    private int initHomeFields(int counter, Field field) {
         if (!(field instanceof ExitField exitField)) {
             throw new IllegalStateException("Field with id " + field.getId() + " is not an ExitField");
         }
-        HomeField homeField = new HomeField(color);
-        homeField.setId(counter++);
-        fields.add(homeField);
-        exitField.setHomeField(homeField);
-        for (int i = 0; i < 3; i++) {
-            HomeField nextHomeField = new HomeField(color);
-            nextHomeField.setId(counter++);
-            fields.add(nextHomeField);
-            homeField.setNextField(nextHomeField);
-            homeField = nextHomeField;
+        HomeField previousHomeField = null;
+        for (int i = 0; i < 4; i++) {
+            HomeField homeField = new HomeField(exitField.getColor());
+            homeField.setId(counter++);
+            fields.add(homeField);
+            if (i == 0){
+                exitField.setHomeField(homeField);
+            } else {
+                previousHomeField.setNextField(homeField);
+            }
+            previousHomeField = homeField;
         }
         return counter;
     }
