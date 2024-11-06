@@ -5,6 +5,7 @@ import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.Players;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class StandardPlayingField implements PlayingField {
 
@@ -126,26 +127,22 @@ public class StandardPlayingField implements PlayingField {
     }
 
     public Optional<Color> winner() {
-        Map<Color, Integer> colorMap = new EnumMap<>(Color.class);
-
-        for (Color color : Color.values()) {
-            colorMap.put(color, 0);
-        }
-
-        for (Field field : fields) {
-            if (field instanceof HomeField homeField && !homeField.isEmpty()) {
-                colorMap.put(homeField.getColor(), colorMap.get(homeField.getColor()) + 1);
-            }
-        }
-
-        for (Map.Entry<Color, Integer> entry : colorMap.entrySet()) {
-            if (entry.getValue() == 4) {
-                return Optional.of(entry.getKey());
-            }
-        }
-
-        return Optional.empty();
+        return createColorCount().entrySet().stream()
+                .filter(entry -> entry.getValue() == 4)
+                .map(Map.Entry::getKey)
+                .findFirst();
     }
+
+    private EnumMap<Color, Long> createColorCount() {
+        return fields.stream()
+                .filter(field -> field instanceof HomeField homeField && !homeField.isEmpty())
+                .collect(Collectors.groupingBy(
+                        field -> ((HomeField) field).getColor(),
+                        () -> new EnumMap<>(Color.class),
+                        Collectors.counting()
+                ));
+    }
+
 
     public List<Action> possibleActions(Player player, int roll) {
         List<Action> result = new LinkedList<>();
