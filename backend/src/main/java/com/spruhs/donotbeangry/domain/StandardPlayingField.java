@@ -147,63 +147,102 @@ public class StandardPlayingField implements PlayingField {
     public List<Action> possibleActions(Player player, int roll) {
         List<Action> result = new LinkedList<>();
 
+        List<Field> figurePositions = getFigureFields(player);
+
+        //if (figurePositions.size() != 4) {
+        //    throw new IllegalStateException("Player " + player.color() + " has not placed all figures on the field");
+        //}
+
         if (roll == 6) {
-            for (Field field : fields) {
-                if (field instanceof BaseField baseField && baseField.getColor() == player.color() && !baseField.isEmpty()) {
-                    for (Field field1 : fields) {
-                        if (field1 instanceof EntranceField entranceField && entranceField.getColor() == player.color() && (field1.isEmpty() || !field1.isEmpty() && field1.getPlacedFigure().color() != player.color())) {
-                            result.add(new Action(field.getPlacedFigure(), field, field1, roll));
-                            return result;
-                        }
-                    }
+            if (isFigureInBase(player, figurePositions) && !isFigureInEntrance(player, figurePositions)) {
+                return createActionForBaseFigure(roll, figurePositions, result);
+            }
+            if (isFigureInBase(player, figurePositions)) {
+                Field entranceField = getEntrance(player.color());
+                Field destinationField = getDestination(entranceField);
+                if (destinationField.isEmpty() || destinationField.getPlacedFigure().color() != player.color()) {
+                    result.add(new Action(entranceField.getPlacedFigure(), entranceField, destinationField, roll));
+                    return result;
                 }
             }
         }
 
-        for (Field field: fields) {
-            if (field instanceof EntranceField entranceField && entranceField.getColor() == player.color() && !field.isEmpty() && field.getPlacedFigure().color() == player.color()) {
-                for (Field field1 : fields) {
-                    if (field1 instanceof BaseField baseField && baseField.getColor() == player.color() && !baseField.isEmpty()) {
-                        if (getField(field.getId() + roll).isEmpty() || !getField(field.getId() + roll).isEmpty() && getField(field.getId() + roll).getPlacedFigure().color() != player.color()) {
-                            result.add(new Action(field.getPlacedFigure(), field, getField(field.getId() + roll), roll));
-                            return result;
-                        }
-                    }
-                }
+        for (Field figureField : figurePositions) {
+            if (!(figureField instanceof BaseField)) {
+                calculateAction(player, roll, figureField, result);
             }
         }
-        for (Field field : fields) {
-            if (field.getPlacedFigure() != null && field.getPlacedFigure().color() == player.color()) {
-                if (field instanceof BaseField baseField) {
-                    if (roll == 6 && baseField.getNextField().isEmpty() || baseField.getPlacedFigure().color() != player.color()) {
-                        result.add(new Action(field.getPlacedFigure(), field, baseField.getNextField(), roll));
-                    }
-                    continue;
-                }
 
-                Field nextField = field instanceof ExitField exitField && exitField.getColor() == player.color() ? exitField.getHomeField() : field.getNextField();
-                if (nextField == null) {
-                    continue;
-                }
-                for (int i = 0; i < roll - 1; i++) {
-                    nextField = nextField instanceof ExitField exitField && exitField.getColor() == player.color() ? exitField.getHomeField() : nextField.getNextField();
-                    if (nextField == null) {
-                        break;
-                    }
-                }
-
-                if (nextField == null) {
-                    continue;
-                }
-
-                if (!nextField.isEmpty() && nextField.getPlacedFigure().color() == player.color()) {
-                    continue;
-                }
-
-                result.add(new Action(field.getPlacedFigure(), field, nextField, roll));
-            }
-        }
         return result;
+    }
+
+    private void calculateAction(Player player, int roll, Field figureField, List<Action> result) {
+        Field nextField = getNextField(player, figureField);
+        if (nextField == null) {
+            return;
+        }
+        for (int i = 0; i < roll - 1; i++) {
+            nextField = getNextField(player, nextField);
+            if (nextField == null) {
+                break;
+            }
+        }
+
+        if (nextField == null) {
+            return;
+        }
+
+        if (!nextField.isEmpty() && nextField.getPlacedFigure().color() == player.color()) {
+            return;
+        }
+
+        result.add(new Action(figureField.getPlacedFigure(), figureField, nextField, roll));
+    }
+
+    private Field getNextField(Player player, Field figureField) {
+        return figureField instanceof ExitField exitField && exitField.getColor() == player.color() ? exitField.getHomeField() : figureField.getNextField();
+    }
+
+    private Field getDestination(Field entranceField) {
+        Field destinationField = entranceField.getNextField();
+        for (int i = 0; i < 5; i++) {
+            destinationField = destinationField.getNextField();
+        }
+        return destinationField;
+    }
+
+    private List<Field> getFigureFields(Player player) {
+        return fields.stream()
+                .filter(field -> field.getPlacedFigure() != null && field.getPlacedFigure().color() == player.color())
+                .toList();
+    }
+
+    private boolean isFigureInBase(Player player, List<Field> figurePositions) {
+        return figurePositions.stream()
+                .anyMatch(field -> field instanceof BaseField baseField && baseField.getColor() == player.color() && !baseField.isEmpty());
+    }
+
+    private List<Action> createActionForBaseFigure(int roll, List<Field> figurePositions, List<Action> result) {
+        Field baseField = figurePositions.stream()
+                .filter(field -> field instanceof BaseField && !field.isEmpty())
+                .findFirst()
+                .orElseThrow();
+        result.add(new Action(baseField.getPlacedFigure(), baseField, baseField.getNextField(), roll));
+        return result;
+    }
+
+    private boolean isFigureInEntrance(Player player, List<Field> figurePositions) {
+        return figurePositions.stream()
+                .anyMatch(field -> field instanceof EntranceField entranceField && entranceField.getColor() == player.color() && !field.isEmpty());
+    }
+
+    private Field getEntrance(Color color) {
+        return switch (color) {
+            case BLUE -> getField(BLUE_ENTRANCE_ID);
+            case GREEN -> getField(GREEN_ENTRANCE_ID);
+            case RED -> getField(RED_ENTRANCE_ID);
+            case YELLOW -> getField(YELLOW_ENTRANCE_ID);
+        };
     }
 
     public Color nextColor(Color color) {
