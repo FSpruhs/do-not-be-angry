@@ -193,27 +193,30 @@ public class StandardPlayingField implements PlayingField {
     }
 
     private void calculateAction(Player player, int roll, Field figureField, List<Action> result) {
-        Field nextField = getNextField(player, figureField);
-        if (nextField == null) {
+        Field destinationField = getDestinationField(player, figureField, roll);
+
+        if (destinationField == null || isBlockedByOwnFigure(player, destinationField)) {
             return;
         }
-        for (int i = 0; i < roll - 1; i++) {
-            nextField = getNextField(player, nextField);
-            if (nextField == null) {
-                break;
+
+        result.add(new Action(figureField.getPlacedFigure(), figureField, destinationField, roll));
+    }
+
+    private Field getDestinationField(Player player, Field startField, int steps) {
+        Field currentField = startField;
+        for (int i = 0; i < steps; i++) {
+            currentField = getNextField(player, currentField);
+            if (currentField == null) {
+                return null;
             }
         }
-
-        if (nextField == null) {
-            return;
-        }
-
-        if (!nextField.isEmpty() && nextField.getPlacedFigure().color() == player.color()) {
-            return;
-        }
-
-        result.add(new Action(figureField.getPlacedFigure(), figureField, nextField, roll));
+        return currentField;
     }
+
+    private boolean isBlockedByOwnFigure(Player player, Field field) {
+        return !field.isEmpty() && field.getPlacedFigure().color() == player.color();
+    }
+
 
     private Field getNextField(Player player, Field figureField) {
         return figureField instanceof ExitField exitField && exitField.getColor() == player.color() ? exitField.getHomeField() : figureField.getNextField();
