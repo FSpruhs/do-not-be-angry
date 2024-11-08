@@ -155,25 +155,34 @@ public class StandardPlayingField implements PlayingField {
 
         if (roll == 6) {
             if (isFigureInBase(player, figurePositions) && !isFigureInEntrance(player, figurePositions)) {
-                return createActionForBaseFigure(roll, figurePositions, result);
+                createActionForBaseFigure(roll, figurePositions, result);
+            } else if (isFigureInBase(player, figurePositions)) {
+                createActionForEntranceField(player, roll, result);
             }
-            if (isFigureInBase(player, figurePositions)) {
-                Field entranceField = getEntrance(player.color());
-                Field destinationField = getDestination(entranceField);
-                if (destinationField.isEmpty() || destinationField.getPlacedFigure().color() != player.color()) {
-                    result.add(new Action(entranceField.getPlacedFigure(), entranceField, destinationField, roll));
-                    return result;
+        }
+
+        if (result.isEmpty()) {
+            for (Field figureField : figurePositions) {
+                if (!(figureField instanceof BaseField)) {
+                    calculateAction(player, roll, figureField, result);
                 }
             }
         }
 
-        for (Field figureField : figurePositions) {
-            if (!(figureField instanceof BaseField)) {
-                calculateAction(player, roll, figureField, result);
-            }
-        }
 
         return result;
+    }
+
+    private void createActionForEntranceField(Player player, int roll, List<Action> result) {
+        Field entranceField = getEntrance(player.color());
+        Field destinationField = getDestination(entranceField);
+        if (destinationField.isEmpty() || isSameColor(player, destinationField)) {
+            result.add(new Action(entranceField.getPlacedFigure(), entranceField, destinationField, roll));
+        }
+    }
+
+    private boolean isSameColor(Player player, Field field) {
+        return field.getPlacedFigure().color() != player.color();
     }
 
     private void calculateAction(Player player, int roll, Field figureField, List<Action> result) {
@@ -222,13 +231,12 @@ public class StandardPlayingField implements PlayingField {
                 .anyMatch(field -> field instanceof BaseField baseField && baseField.getColor() == player.color() && !baseField.isEmpty());
     }
 
-    private List<Action> createActionForBaseFigure(int roll, List<Field> figurePositions, List<Action> result) {
+    private void createActionForBaseFigure(int roll, List<Field> figurePositions, List<Action> result) {
         Field baseField = figurePositions.stream()
                 .filter(field -> field instanceof BaseField && !field.isEmpty())
                 .findFirst()
                 .orElseThrow();
         result.add(new Action(baseField.getPlacedFigure(), baseField, baseField.getNextField(), roll));
-        return result;
     }
 
     private boolean isFigureInEntrance(Player player, List<Field> figurePositions) {
