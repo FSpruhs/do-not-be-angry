@@ -154,23 +154,30 @@ public class StandardPlayingField implements PlayingField {
         //}
 
         if (roll == 6) {
-            if (isFigureInBase(player, figurePositions) && !isFigureInEntrance(player, figurePositions)) {
-                createActionForBaseFigure(roll, figurePositions, result);
-            } else if (isFigureInBase(player, figurePositions)) {
-                createActionForEntranceField(player, roll, result);
-            }
+            createActionsWhenRollSix(player, roll, figurePositions, result);
         }
 
         if (result.isEmpty()) {
-            for (Field figureField : figurePositions) {
-                if (!(figureField instanceof BaseField)) {
-                    calculateAction(player, roll, figureField, result);
-                }
-            }
+            createActionForStandardFields(player, roll, figurePositions, result);
         }
 
-
         return result;
+    }
+
+    private void createActionsWhenRollSix(Player player, int roll, List<Field> figurePositions, List<Action> result) {
+        if (isFigureInBase(player, figurePositions) && !isFigureInEntrance(player, figurePositions)) {
+            createActionForBaseFigure(roll, figurePositions, result);
+        } else if (isFigureInBase(player, figurePositions)) {
+            createActionForEntranceField(player, roll, result);
+        }
+    }
+
+    private void createActionForStandardFields(Player player, int roll, List<Field> figurePositions, List<Action> result) {
+        for (Field figureField : figurePositions) {
+            if (!(figureField instanceof BaseField)) {
+                calculateAction(player, roll, figureField, result);
+            }
+        }
     }
 
     private void createActionForEntranceField(Player player, int roll, List<Action> result) {
