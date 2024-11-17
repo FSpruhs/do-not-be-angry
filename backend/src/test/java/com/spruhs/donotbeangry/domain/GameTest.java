@@ -1,10 +1,9 @@
 package com.spruhs.donotbeangry.domain;
 
-import com.spruhs.donotbeangry.domain.field.Field;
 import com.spruhs.donotbeangry.domain.field.StandardField;
 import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.Players;
-import com.spruhs.donotbeangry.domain.player.Random;
+import com.spruhs.donotbeangry.domain.player.strategy.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

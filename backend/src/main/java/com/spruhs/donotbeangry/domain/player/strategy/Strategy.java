@@ -1,8 +1,7 @@
-package com.spruhs.donotbeangry.domain.player;
+package com.spruhs.donotbeangry.domain.player.strategy;
 
 import com.spruhs.donotbeangry.domain.Action;
 import com.spruhs.donotbeangry.domain.PlayingField;
-import com.spruhs.donotbeangry.domain.StandardPlayingField;
 
 import java.util.List;
 

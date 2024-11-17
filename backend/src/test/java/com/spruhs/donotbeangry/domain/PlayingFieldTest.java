@@ -2,7 +2,7 @@ package com.spruhs.donotbeangry.domain;
 
 import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.Players;
-import com.spruhs.donotbeangry.domain.player.Random;
+import com.spruhs.donotbeangry.domain.player.strategy.Random;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

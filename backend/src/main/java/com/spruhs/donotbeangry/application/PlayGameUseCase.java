@@ -3,7 +3,7 @@ package com.spruhs.donotbeangry.application;
 import com.spruhs.donotbeangry.domain.*;
 import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.Players;
-import com.spruhs.donotbeangry.domain.player.Random;
+import com.spruhs.donotbeangry.domain.player.strategy.Random;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

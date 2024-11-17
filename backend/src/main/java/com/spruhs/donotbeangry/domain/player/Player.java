@@ -3,6 +3,7 @@ package com.spruhs.donotbeangry.domain.player;
 import com.spruhs.donotbeangry.domain.Action;
 import com.spruhs.donotbeangry.domain.Color;
 import com.spruhs.donotbeangry.domain.PlayingField;
+import com.spruhs.donotbeangry.domain.player.strategy.Strategy;
 
 import java.util.List;
 
