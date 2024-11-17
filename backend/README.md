@@ -1,0 +1,1 @@
+![Sample Image](standard-playing-field.webp)
