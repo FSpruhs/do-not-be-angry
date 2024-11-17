@@ -291,4 +291,18 @@ public class StandardPlayingField implements PlayingField {
             }
         }
     }
+
+    public void reset() {
+        Set<Color> colors = new HashSet<>();
+        for (Field field : fields) {
+            if (field.getPlacedFigure() != null) {
+                colors.add(field.getPlacedFigure().color());
+                field.removeFigure();
+            }
+
+        }
+        for (Color color : colors) {
+            putFiguresOnField(color);
+        }
+    }
 }

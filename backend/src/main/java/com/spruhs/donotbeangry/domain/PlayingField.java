@@ -10,4 +10,5 @@ public interface PlayingField {
     List<Action> possibleActions(Player player, int roll);
     Color nextColor(Color color);
     void moveFigure(Action action);
+    void reset();
 }
