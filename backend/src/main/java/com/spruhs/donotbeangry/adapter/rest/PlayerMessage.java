@@ -3,6 +3,7 @@ package com.spruhs.donotbeangry.adapter.rest;
 import com.spruhs.donotbeangry.domain.Color;
 import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.strategy.HitFirst;
+import com.spruhs.donotbeangry.domain.player.strategy.HitFirstThenHomeFirst;
 import com.spruhs.donotbeangry.domain.player.strategy.Random;
 import com.spruhs.donotbeangry.domain.player.strategy.Strategy;
 import jakarta.validation.constraints.NotEmpty;
@@ -19,6 +20,8 @@ public record PlayerMessage(@NotNull Color color, @NotEmpty String strategy) {
                 return new Random();
              case "hitFirst":
                 return new HitFirst();
+             case "hitFirstThenHomeFirst":
+                return new HitFirstThenHomeFirst();
             default:
                 throw new IllegalArgumentException("Unknown strategy: " + strategy);
         }
