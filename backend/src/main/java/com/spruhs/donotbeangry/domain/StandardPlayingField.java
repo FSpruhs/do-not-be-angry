@@ -149,9 +149,9 @@ public class StandardPlayingField implements PlayingField {
 
         List<Field> figurePositions = getFigureFields(player);
 
-        //if (figurePositions.size() != 4) {
-        //    throw new IllegalStateException("Player " + player.color() + " has not placed all figures on the field");
-        //}
+        if (figurePositions.size() != 4) {
+            throw new IllegalStateException("Player " + player.color() + " has placed only " + figurePositions.size() + " figures on the field");
+        }
 
         if (roll == 6) {
             createActionsWhenRollSix(player, roll, figurePositions, result);
@@ -288,6 +288,7 @@ public class StandardPlayingField implements PlayingField {
         for (Field field : fields) {
             if (field instanceof BaseField baseField && baseField.getColor() == figure.color() && field.isEmpty()) {
                 field.placeFigure(figure);
+                break;
             }
         }
     }

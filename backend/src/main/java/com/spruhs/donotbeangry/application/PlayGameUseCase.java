@@ -26,6 +26,7 @@ public class PlayGameUseCase {
         PlayingField playingField = new StandardPlayingField(players);
 
         for (int i = 0; i < command.numberOfGames; i++) {
+            log.info("Starting game {}", i + 1);
             Color winner = startGame(dice, players, playingField);
             log.info("Game {} won by {}", i + 1, winner);
             playingField.reset();

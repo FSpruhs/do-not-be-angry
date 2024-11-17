@@ -3,10 +3,12 @@ package com.spruhs.donotbeangry.domain;
 import com.spruhs.donotbeangry.domain.player.Player;
 import com.spruhs.donotbeangry.domain.player.Players;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class Game {
 
