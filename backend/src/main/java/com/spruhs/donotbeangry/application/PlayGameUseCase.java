@@ -6,17 +6,25 @@ import com.spruhs.donotbeangry.domain.player.Players;
 import com.spruhs.donotbeangry.domain.player.Random;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PlayGameUseCase {
 
-    public Color playGame(Command command) {
+    public Map<Color, Integer> playGame(Command command) {
+        Map<Color, Integer> result = new EnumMap<>(Color.class);
+        for (int i = 0; i < command.numberOfGames; i++) {
+            Color winner = startGame(command);
+            result.put(winner, result.getOrDefault(winner, 0) + 1);
+        }
+        return result;
+    }
+
+    private Color startGame(Command command) {
         Dice dice = new SimpleDice();
         List<Player> playerList = new LinkedList<>();
-        for (Color color : command.players) {
-            playerList.add(new Player(color, new Random()));
+        for (Player player : command.players) {
+            playerList.add(new Player(player.color(), new Random()));
         }
 
         Players players = new Players(playerList);
@@ -25,5 +33,14 @@ public class PlayGameUseCase {
         return game.start();
     }
 
-    public record Command(List<Color> players) {}
+    public record Command(List<Player> players, int numberOfGames) {
+        public Command {
+            if (players.size() < 2) {
+                throw new IllegalArgumentException("At least two players are required");
+            }
+            if (numberOfGames < 1) {
+                throw new IllegalArgumentException("At least one game is required");
+            }
+        }
+    }
 }
